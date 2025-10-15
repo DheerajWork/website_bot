@@ -7,6 +7,8 @@ from webdriver_manager.chrome import ChromeDriverManager
 from bs4 import BeautifulSoup
 import re, json, time, tldextract, os
 
+# ---------------- Utility functions ---------------- #
+
 def clean(text):
     return re.sub(r'\s+', ' ', text).strip() if text else "N/A"
 
@@ -84,13 +86,14 @@ def detect_business_line(text):
     if "marketing" in t: return "Marketing Agency"
     return "Business / Service Provider"
 
+# ---------------- Scraping function ---------------- #
+
 def scrape_site(url, headless=True):
     opt = Options()
     if headless:
-        opt.add_argument("--headless")
+        opt.add_argument("--headless")  # Run without GUI
     
-    # ✅ Mac compatible Chrome path
-    opt.binary_location = "/Applications/Google Chrome.app/Contents/MacOS/Google Chrome"
+    # ✅ Render / Linux compatible options
     opt.add_argument("--no-sandbox")
     opt.add_argument("--disable-dev-shm-usage")
     opt.add_argument("--disable-gpu")
@@ -155,6 +158,8 @@ def scrape_site(url, headless=True):
         "Twitter / X": socials["Twitter"],
     }
     return data
+
+# ---------------- Main ---------------- #
 
 if __name__ == "__main__":
     url = input("Enter website URL: ").strip()
