@@ -3,9 +3,8 @@ print("🚀 Script started")
 from selenium import webdriver
 from selenium.webdriver.chrome.service import Service
 from selenium.webdriver.chrome.options import Options
-from webdriver_manager.chrome import ChromeDriverManager
 from bs4 import BeautifulSoup
-import re, json, time, tldextract
+import re, json, time, tldextract, os
 
 # ---------------- Utility functions ---------------- #
 
@@ -91,21 +90,17 @@ def detect_business_line(text):
 def scrape_site(url, headless=True):
     opt = Options()
     if headless:
-        opt.add_argument("--headless")  # Run without GUI
-    
-    # ✅ Linux / Render friendly
+        opt.add_argument("--headless")
     opt.add_argument("--no-sandbox")
     opt.add_argument("--disable-dev-shm-usage")
     opt.add_argument("--disable-gpu")
     opt.add_argument("--log-level=3")
-    
-    # Use environment variable if Docker set it
-    import os
-    chrome_path = os.environ.get("CHROME_BIN", None)
-    if chrome_path:
-        opt.binary_location = chrome_path
-    
-    driver = webdriver.Chrome(service=Service(ChromeDriverManager().install()), options=opt)
+
+    chrome_bin = os.environ.get("CHROME_BIN", "/usr/bin/chromium-browser")
+    chrome_driver = os.environ.get("CHROME_DRIVER", "/usr/bin/chromedriver")
+    opt.binary_location = chrome_bin
+
+    driver = webdriver.Chrome(service=Service(chrome_driver), options=opt)
     driver.get(url)
     time.sleep(3)
     soup = BeautifulSoup(driver.page_source, "html.parser")

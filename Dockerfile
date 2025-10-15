@@ -26,7 +26,7 @@ RUN apt-get update && apt-get install -y \
 ENV CHROME_BIN="/usr/bin/chromium-browser"
 ENV CHROME_DRIVER="/usr/bin/chromedriver"
 
-# Copy project files
+# Set working directory
 WORKDIR /app
 COPY . .
 

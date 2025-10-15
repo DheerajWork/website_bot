@@ -1,6 +1,5 @@
 fastapi
 uvicorn
 selenium
-webdriver-manager
 beautifulsoup4
 tldextract
