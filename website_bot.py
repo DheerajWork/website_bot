@@ -5,7 +5,7 @@ from selenium.webdriver.chrome.service import Service
 from selenium.webdriver.chrome.options import Options
 from webdriver_manager.chrome import ChromeDriverManager
 from bs4 import BeautifulSoup
-import re, json, time, tldextract, os
+import re, json, time, tldextract
 
 # ---------------- Utility functions ---------------- #
 
@@ -93,11 +93,17 @@ def scrape_site(url, headless=True):
     if headless:
         opt.add_argument("--headless")  # Run without GUI
     
-    # ✅ Render / Linux compatible options
+    # ✅ Linux / Render friendly
     opt.add_argument("--no-sandbox")
     opt.add_argument("--disable-dev-shm-usage")
     opt.add_argument("--disable-gpu")
     opt.add_argument("--log-level=3")
+    
+    # Use environment variable if Docker set it
+    import os
+    chrome_path = os.environ.get("CHROME_BIN", None)
+    if chrome_path:
+        opt.binary_location = chrome_path
     
     driver = webdriver.Chrome(service=Service(ChromeDriverManager().install()), options=opt)
     driver.get(url)
@@ -158,10 +164,3 @@ def scrape_site(url, headless=True):
         "Twitter / X": socials["Twitter"],
     }
     return data
-
-# ---------------- Main ---------------- #
-
-if __name__ == "__main__":
-    url = input("Enter website URL: ").strip()
-    result = scrape_site(url)
-    print(json.dumps(result, indent=2, ensure_ascii=False))
