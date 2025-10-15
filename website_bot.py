@@ -96,6 +96,7 @@ def scrape_site(url, headless=True):
     opt.add_argument("--disable-gpu")
     opt.add_argument("--log-level=3")
 
+    # ✅ Use Render-installed Chrome binary & driver
     chrome_bin = os.environ.get("CHROME_BIN", "/usr/bin/chromium-browser")
     chrome_driver = os.environ.get("CHROME_DRIVER", "/usr/bin/chromedriver")
     opt.binary_location = chrome_bin

@@ -1,6 +1,6 @@
 from fastapi import FastAPI
-from pydantic import BaseModel
 from website_bot import scrape_site
+from pydantic import BaseModel
 
 app = FastAPI(
     title="AI Agents API Collection",
