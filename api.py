@@ -1,6 +1,7 @@
 from fastapi import FastAPI
 from website_bot import scrape_site
 from pydantic import BaseModel
+import os
 
 app = FastAPI(
     title="AI Agents API Collection",
@@ -31,4 +32,5 @@ def scrape_data(input_data: UrlInput):
 
 if __name__ == "__main__":
     import uvicorn
-    uvicorn.run("api:app", host="0.0.0.0", port=10000)
+    port = int(os.environ.get("PORT", 10000))  # Railway provides PORT dynamically
+    uvicorn.run("api:app", host="0.0.0.0", port=port)

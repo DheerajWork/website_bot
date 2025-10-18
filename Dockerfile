@@ -2,7 +2,7 @@
 FROM python:3.10-slim
 
 # Install Chromium + ChromeDriver + dependencies
-RUN apt-get update && apt-get install -y \
+RUN apt-get update && apt-get install -y --no-install-recommends \
     chromium-browser \
     chromium-chromedriver \
     fonts-liberation \

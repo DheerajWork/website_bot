@@ -1,5 +1,5 @@
-fastapi
-uvicorn
-selenium
-beautifulsoup4
-tldextract
+fastapi==0.111.1
+uvicorn==0.24.0
+selenium==5.7.0
+beautifulsoup4==4.12.2
+tldextract==3.4.1
