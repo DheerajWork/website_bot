@@ -1,10 +1,12 @@
 # Base image
 FROM python:3.10-slim
 
-# Install Chromium + ChromeDriver + dependencies
+# Install dependencies and Chromium
 RUN apt-get update && apt-get install -y --no-install-recommends \
-    chromium-browser \
-    chromium-chromedriver \
+    wget \
+    curl \
+    gnupg \
+    unzip \
     fonts-liberation \
     libnss3 \
     libgconf-2-4 \
@@ -18,13 +20,24 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     libatk-bridge2.0-0 \
     libatk1.0-0 \
     libgtk-3-0 \
-    curl \
-    wget \
+    ca-certificates \
     && rm -rf /var/lib/apt/lists/*
 
-# Environment variables for Selenium
-ENV CHROME_BIN="/usr/bin/chromium-browser"
-ENV CHROME_DRIVER="/usr/bin/chromedriver"
+# Install Chromium
+RUN CHROME_VERSION=$(curl -sS https://omahaproxy.appspot.com/linux | head -1) && \
+    wget https://dl.google.com/linux/direct/google-chrome-stable_current_amd64.deb && \
+    apt-get update && apt-get install -y ./google-chrome-stable_current_amd64.deb && \
+    rm google-chrome-stable_current_amd64.deb
+
+# Install ChromeDriver
+RUN CHROMEDRIVER_VERSION=$(google-chrome --version | grep -oP '\d+\.\d+\.\d+') && \
+    wget -O /tmp/chromedriver.zip https://chromedriver.storage.googleapis.com/$CHROMEDRIVER_VERSION/chromedriver_linux64.zip && \
+    unzip /tmp/chromedriver.zip -d /usr/local/bin/ && \
+    rm /tmp/chromedriver.zip
+
+# Set environment variables for Selenium
+ENV CHROME_BIN="/usr/bin/google-chrome"
+ENV CHROME_DRIVER="/usr/local/bin/chromedriver"
 
 # Set working directory
 WORKDIR /app
